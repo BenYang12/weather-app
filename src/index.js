@@ -1,11 +1,16 @@
 import "./style.css";
 
+document.addEventListener("DOMContentLoaded", () => {
+  const submitBtn = document.getElementById("submit");
+  submitBtn.addEventListener("click", fetchWeather);
+});
+
 //use OpenWeatherMap.org's Current Weather Data and Geocoding API
-function fetchWeather() {
+async function fetchWeather() {
   let searchInput = document.getElementById("search").value;
   const weatherOutputSection = document.getElementById("weather-output");
   weatherOutputSection.style.display = "block";
-  const apiKey = "f3c03dd22fa1a6870be0e27b599aa5fcz";
+  const apiKey = "f3c03dd22fa1a6870be0e27b599aa5fc";
 
   if (searchInput == "") {
     weatherOutputSection.innerHTML = `
@@ -16,9 +21,12 @@ function fetchWeather() {
   }
 
   async function getLonAndLat() {
-    const countryCode = 1;
-    const geocodeURL = `http://api.openweathermap.org/geo/1.0/direct?q=${searchInput.replace(" ", "%20")},${countryCode}&limit=1&appid=${apiKey}`; //spaces must be encoded with %20
-    const response = await fetch(geocodeURL);
+    const countryCode = "US";
+    const response = await fetch(
+      `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(searchInput)},${countryCode}&limit=1&appid=${apiKey}`,
+    );
+    //spaces must be encoded, use encodeURIComaponent
+
     if (!response.ok) {
       console.log("Bad response!");
       return;
@@ -27,28 +35,28 @@ function fetchWeather() {
     if (data.length == 0) {
       console.log("Something went wrong with fetching the data.");
       weatherOutputSection.innerHTML = `
-  <div>
-    <h2>Invalid Input: "${searchInput}"</h2>
-    <p>Please double check city name and try again</p>
-  </div>
-  `;
+    <div>
+      <h2>Invalid Input: "${searchInput}"</h2>
+      <p>Please double check city name and try again</p>
+    </div>`;
       return;
     } else {
       return data[0];
     }
   }
-
   async function getWeatherData(lon, lat) {
-    const weatherURL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`;
-    const response = await fetch(weatherURL);
+    const response = await fetch(
+      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`,
+    );
     if (!response.ok) {
-      console.log("Bad response!", response.status);
+      console.log("Bad Response!");
       return;
     }
     const data = await response.json();
 
+    weatherOutputSection.style.display = "flex";
     weatherOutputSection.innerHTML = `
-<img src= "https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png />
+<img src="https://openweathermap.org/img/wn/${data.weather[0].icon}.png" alt="${data.weather[0].description}" width="100" />
 <div>
   <h2>${data.name}</h2>
   <p><strong>Temperature:</strong> ${Math.round(data.main.temp - 273.15)}°C</p>
@@ -56,4 +64,7 @@ function fetchWeather() {
 </div>
 `;
   }
+  document.getElementById("search").value = ""; //clear search item
+  const geocodeData = await getLonAndLat();
+  getWeatherData(geocodeData.lon, geocodeData.lat);
 }
