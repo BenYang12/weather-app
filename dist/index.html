@@ -6,29 +6,15 @@
     <title>Weather App</title>
   <script defer src="main.js"></script></head>
   <body>
-    <label for="search">Find Weather Info By Location </label>
-    <input
-      type="text"
-      id="search-city"
-      name="search-city"
-      placeholder="City"
-      required
-    />
-    <input
-      type="text"
-      id="search-state"
-      name="search-state"
-      placeholder="State"
-      required
-    />
-    <input
-      type="text"
-      id="search-country"
-      name="search-country"
-      placeholder="Country Code (ex. US)"
-      required
-    />
-    <button id="search-button">Search</button>
-    <button type="reset" class="reset-button"></button>
+    <main>
+      <section id="weather-wrapper">
+        <h1>Weather App</h1>
+        <div id="weather-search">
+          <input type="text" id="search" placeholder="Search by City" />
+          <button id="submit" onclick="fetchWeather()">Submit</button>
+        </div>
+        <div id="weather-output" style="display: none"></div>
+      </section>
+    </main>
   </body>
 </html>
