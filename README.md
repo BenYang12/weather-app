@@ -22,9 +22,9 @@ Built with **JavaScript**, **HTML**, and **CSS**, the app fetches real-time data
 
 ---
 
-##Screenshots
+
 <img width="1473" height="826" alt="Screenshot 2025-09-10 at 11 43 50 AM" src="https://github.com/user-attachments/assets/72be0af0-be50-484b-91e5-b8b32b312350" />
-ots
+
 
 ---
 
